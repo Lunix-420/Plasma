@@ -545,7 +545,7 @@ PlasmaAudioProcessor::createParameterLayout()
     100.0f));
   // Analyser
   juce::StringArray analyserArray;
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     juce::String str;
     str << "Type ";
     str << i;

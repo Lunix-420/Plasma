@@ -36,6 +36,7 @@ enum AnalyserType
   Waveform,
   Response,
   Shapercurve,
+  Loudness,
   Options
 };
 

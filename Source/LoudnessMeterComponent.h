@@ -1,23 +1,33 @@
 #pragma once
 
+#include "PluginProcessor.h"
 #include <JuceHeader.h>
 
-namespace Gui {
 class LoudnessMeterComponent : public Component
 {
 public:
+  LoudnessMeterComponent(PlasmaAudioProcessor& audioProcessor)
+    : audioProcessor(audioProcessor)
+  {
+  }
+
+  ~LoudnessMeterComponent() override {}
+
   void paint(Graphics& g) override
   {
     auto bounds = getLocalBounds().toFloat();
     g.setColour(Colours::red);
     g.fillAll();
-    g.setColour(Colours::green);
-    g.fillRect(
-      bounds.withTrimmedTop(bounds.getHeight() * (1.0f - level / -60.0f)));
   }
-  void setLevel(const float value) { level = value; };
+
+  void setCornerRadius(float cornerRadius)
+  {
+    this->cornerRadius = cornerRadius;
+  }
+
+  void resized() override {}
 
 private:
-  float level = -60.0f;
+  PlasmaAudioProcessor& audioProcessor;
+  float cornerRadius = 5.0f;
 };
-}
