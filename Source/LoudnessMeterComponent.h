@@ -50,16 +50,32 @@ public:
     g.setColour(fontColor);
     const int meterBorderThickness = int(inMeterInnerBounds.getWidth() * 0.08f);
     g.drawRect(inMeterInnerBounds, meterBorderThickness);
-    g.setColour(accentColor);
-    g.fillRect(inMeterInnerBounds.reduced(meterBorderThickness * 2));
 
-    // Let's calculate the bar size for the RMS level
-    const float minValue = -60.0f;
-    const float maxValue = 12.0f;
-    const float rawValue = std::clamp(rmsLevelLeftIn, minValue, maxValue);
-    const float normalizedValue = (rawValue - minValue) / (maxValue - minValue);
-    const float rawHeight = inMeterInnerBounds.getHeight();
-    const float barHeight = rawHeight * normalizedValue;
+    const auto barBounds = inMeterInnerBounds.reduced(meterBorderThickness * 2);
+    const auto leftBarRawBounds = barBounds.withTrimmedRight(
+      barBounds.getWidth() / 2.0f + meterBorderThickness / 2.0f);
+    const auto rightBarRawBounds = barBounds.withTrimmedLeft(
+      barBounds.getWidth() / 2.0f + meterBorderThickness / 2.0f);
+
+    const float minValue = -64.0f;
+    const float maxValue = 16.0f;
+    const float leftRawValue = 0.0f;
+    const float rightRawValue = -12.0f;
+    // std::clamp(Decibels::gainToDecibels(rmsLevelLeftIn), minValue, maxValue);
+    const float leftNormalizedValue =
+      (leftRawValue - minValue) / (maxValue - minValue);
+    const float rightNormalizedValue =
+      (rightRawValue - minValue) / (maxValue - minValue);
+    const float rawHeight = barBounds.getHeight();
+    const float leftBarHeight = rawHeight * leftNormalizedValue;
+    const float rightBarHeight = rawHeight * rightNormalizedValue;
+    const auto leftBarBounds =
+      leftBarRawBounds.withTrimmedTop(rawHeight - leftBarHeight);
+    const auto rightBarBounds =
+      rightBarRawBounds.withTrimmedTop(rawHeight - rightBarHeight);
+    g.setColour(accentColor);
+    g.fillRect(leftBarBounds);
+    g.fillRect(rightBarBounds);
   }
 
   void setCornerRadius(float cornerRadius)
