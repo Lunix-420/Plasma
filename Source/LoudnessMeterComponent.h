@@ -53,15 +53,16 @@ public:
 
     const auto barBounds = inMeterInnerBounds.reduced(meterBorderThickness * 2);
     const auto leftBarRawBounds = barBounds.withTrimmedRight(
-      barBounds.getWidth() / 2.0f + meterBorderThickness / 2.0f);
+      barBounds.getWidth() / 2.0f + meterBorderThickness);
     const auto rightBarRawBounds = barBounds.withTrimmedLeft(
       barBounds.getWidth() / 2.0f + meterBorderThickness / 2.0f);
 
     const float minValue = -64.0f;
     const float maxValue = 16.0f;
-    const float leftRawValue = 0.0f;
-    const float rightRawValue = -12.0f;
-    // std::clamp(Decibels::gainToDecibels(rmsLevelLeftIn), minValue, maxValue);
+    const float leftRawValue =
+      std::clamp(Decibels::gainToDecibels(rmsLevelLeftIn), minValue, maxValue);
+    const float rightRawValue =
+      std::clamp(Decibels::gainToDecibels(rmsLevelRightIn), minValue, maxValue);
     const float leftNormalizedValue =
       (leftRawValue - minValue) / (maxValue - minValue);
     const float rightNormalizedValue =
