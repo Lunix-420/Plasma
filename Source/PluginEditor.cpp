@@ -1694,6 +1694,7 @@ PlasmaAudioProcessorEditor::setBackgroundColor(Colour c)
   }
   waveformComponent->setBackgroundColor(c, foregroundColor);
   valueEditor.setBackgroundColor(c);
+  loudnessMeterComponent.setBackgroundColor(c);
 }
 
 void
@@ -1715,6 +1716,7 @@ PlasmaAudioProcessorEditor::setAccentColor(Colour c)
   for (auto* slider : getSliders()) {
     slider->setColour(Slider::ColourIds::rotarySliderFillColourId, c);
   }
+  loudnessMeterComponent.setAccentColor(c);
 }
 
 void
@@ -1733,6 +1735,7 @@ PlasmaAudioProcessorEditor::setFontColor(Colour c)
   }
   plasmaLabel.setColour(Label::ColourIds::textColourId, c);
   plasmaLabel.setColour(Label::ColourIds::textColourId, c);
+  loudnessMeterComponent.setFontColor(c);
 }
 
 void

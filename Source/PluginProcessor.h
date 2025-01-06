@@ -216,12 +216,8 @@ public:
   WaveformComponent waveformComponent;
   VersionManager versionManager;
 
-private:
-  // Clean Buffer
-  AudioSampleBuffer cleanBuffer;
-
   // LoudnessMeter
-  float rmsLevelLeftIn{ 0.0f }, rmsLevelRight{ 0.0f };
+  float rmsLevelLeftIn{ 0.4f }, rmsLevelRightIn{ 0.2f };
   float rmsLevelLeftOut{ 0.0f }, rmsLevelRightOut{ 0.0f };
   float peakLevelLeftIn{ 0.0f }, peakLevelRightIn{ 0.0f };
   float peakLevelLeftOut{ 0.0f }, peakLevelRightOut{ 0.0f };
@@ -229,6 +225,10 @@ private:
   Ebu128LoudnessMeter loudnessMeterOut;
   float momentaryLoudnessIn{ 0.0f }, momentaryLoudnessOut{ 0.0f };
   float integratedLoudnessIn{ 0.0f }, integratedLoudnessOut{ 0.0f };
+
+private:
+  // Clean Buffer
+  AudioSampleBuffer cleanBuffer;
 
   // Filters
   MonoChain leftChain, rightChain;
