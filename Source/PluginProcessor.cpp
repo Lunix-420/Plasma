@@ -241,8 +241,9 @@ PlasmaAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     tmpBuffer.copyFrom(ch, 0, buffer, ch, 0, buffer.getNumSamples());
 
   // Clean RMS
-  auto leftRms = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
-  auto rightRms = buffer.getRMSLevel(1, 0, buffer.getNumSamples());
+  auto rmsLevelLeftIn = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
+  auto rmsLevelRightIn =
+    -12.0; // buffer.getRMSLevel(1, 0, buffer.getNumSamples());
 
   // Clean Loudness Meter
   loudnessMeterIn.processBlock(buffer);
@@ -294,7 +295,7 @@ PlasmaAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
   // Filter
   updateFilters();
   auto threshold = 0.0f;
-  if (leftRms != threshold) {
+  if (rmsLevelLeftIn != threshold) {
     auto leftBlock = block.getSingleChannelBlock(0);
     juce::dsp::ProcessContextReplacing<float> leftContext(leftBlock);
     leftChain.process(leftContext);
@@ -305,7 +306,7 @@ PlasmaAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     }
   }
 
-  if (rightRms != threshold) {
+  if (rmsLevelRightIn != threshold) {
     auto rightBlock = block.getSingleChannelBlock(1);
     juce::dsp::ProcessContextReplacing<float> rightContext(rightBlock);
     rightChain.process(rightContext);
@@ -353,11 +354,11 @@ PlasmaAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         }
         // Mix
         channelData[sample] =
-          cleanData[sample] * mixDry + channelData[sample] * mixWet;
+          cleanData[sample] * mixDry +
+          DistortionProcessor::clamp(channelData[sample], -1.0f, 1.0f) * mixWet;
 
-        // Reduce Loudness for Waveform Analyser
-        channelData[sample] =
-          0.5 * DistortionProcessor::clamp(channelData[sample], -1, 1);
+        // Reduce Loudness for Waveform
+        channelData[sample] = 0.5 * channelData[sample];
       }
     }
   }
